@@ -17,8 +17,8 @@ class CreateAppSettingsTable extends Migration
             $table->id();
             $table->string('shop_name');
             $table->string('shop_address');
-            $table->char('shop_phone', 20);
-            $table->string('shop_mail');
+            $table->char('shop_phone', 20)->nullable();
+            $table->string('shop_mail')->nullable();
             $table->float('tax');
             $table->timestamps();
         });

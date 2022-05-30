@@ -82,6 +82,7 @@ class DiscountVoucher extends Component
                     'message' => 'Berhasil menambahkan kode diskon/potongan'
                 ]);
                 $this->reset('code', 'percentage', 'description');
+                $this->emitTo('transaction.transaction', 'updateVoucher');
             }else{
                 $this->dispatchBrowserEvent('message', [
                     'status' => 100 ,
@@ -94,7 +95,6 @@ class DiscountVoucher extends Component
 
     public function editVoucher($id){
         $editVoucher = Discount::where('id', $id)->first();
-        // dd($editVoucher);
         $this->edit_id_voucher = $id;
         $this->edit_code = $editVoucher->code;
         $this->edit_percentage = $editVoucher->percentage;
@@ -130,6 +130,7 @@ class DiscountVoucher extends Component
                 'message' => 'Berhasil mengubah detail diskon/potongan'
             ]);
             $this->reset('code', 'percentage', 'description');
+            $this->emitTo('transaction.transaction', 'updateVoucher');
         }else{
             $this->dispatchBrowserEvent('message', [
                 'status' => 100 ,
@@ -162,6 +163,7 @@ class DiscountVoucher extends Component
                     'status' => 200 ,
                     'message' => 'Berhasil meghapus kode diskon'
                 ]);
+                $this->emitTo('transaction.transaction', 'updateVoucher');
             }else{
                 $this->dispatchBrowserEvent('message', [
                     'status' => 100 ,

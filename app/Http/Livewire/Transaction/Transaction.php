@@ -3,19 +3,36 @@
 namespace App\Http\Livewire\Transaction;
 
 use App\AppSetting;
+use App\Category;
+use App\Discount;
+use App\Http\Livewire\Product\ProductCategory;
 use App\Product;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Transaction extends Component
 {
-    public $cart;
-    public $sessionId, $qty, $no, $tax, $totalTransaction = 0;
+    public $cart, $vouchers, $voucherSelected;
+    public $sessionId, $qty, $no, $tax, $voucherCode, $totalTransaction = 0;
+    public $search;
+    public $products;
+    public $subTotal;
+    public $discount, $discountType;
 
     public function mount(){
-        $this->sessionId = rand(1,100);
+        $this->sessionId = Auth::user()->id;
         $this->tax = AppSetting::select('tax')->first()->tax;
+
+        $this->vouchers = Discount::all();
+        $this->cart = Cart::session($this->sessionId);
+        $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
+
+        $this->products = Product::with(['categories'])->get();
     }
+
+    protected $listeners = ['updateVoucher'];
 
     public function addToCart($id){
         $product = Product::where('id', $id)->select('id', 'product_code', 'name', 'price')->first();
@@ -41,6 +58,7 @@ class Transaction extends Component
         }
 
         $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
 
     }
 
@@ -50,6 +68,7 @@ class Transaction extends Component
             'quantity' => 1,
         ]);
         $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
     }
 
     public function decreaseItem($id, $qty){
@@ -73,11 +92,13 @@ class Transaction extends Component
             }
         }
         $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
     }
 
     public function deleteItem($id){
         $removeItem = Cart::session($this->sessionId)->remove($id);
         $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
 
         if($removeItem){
             $this->dispatchBrowserEvent('message', [
@@ -92,18 +113,83 @@ class Transaction extends Component
         }
     }
 
+    public function updatedSearch(){
+        $this->products = Product::with(['categories'])
+                    ->where('product_code', 'like', '%'.$this->search.'%')
+                    ->orWhere('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('description', 'like', '%'.$this->search.'%')
+                    ->get();
+        $this->cart = Cart::session($this->sessionId);
+    }
+
     public function checkoutCart(){
         dd($this->cart);
     }
 
+    public function updatedVoucherCode(){
+        $this->cart = Cart::session($this->sessionId);
+        // dd($this->voucherSelected);
 
+        if(!$this->voucherCode){
+            $this->totalTransaction = Cart::getTotal();
+            $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
+            $this->discount == null;
+        }else if($this->voucherSelected->type == 1){
+            $this->totalTransaction = Cart::getTotal();
+            $tax = ($this->totalTransaction * $this->tax / 100);
+            $total = Cart::getTotal() + $tax ;
+            $disc = $total - $this->voucherSelected->percentage;
+            $this->subTotal = $disc;
+            $this->discount = $this->voucherSelected->percentage;
+        }else if($this->voucherSelected->type == 2){
+            $this->totalTransaction = Cart::getTotal();
+            $tax = ($this->totalTransaction * $this->tax / 100);
+            $total = Cart::getTotal() + $tax ;
+            $disc = $total - ($total * $this->voucherSelected->percentage / 100);
+            $this->subTotal = $disc;
+            $this->discount = $total * $this->voucherSelected->percentage / 100;
+        }
+    }
+
+    public function applyVoucher($id){
+        $this->voucherSelected = Discount::where('id', $id)->first();
+        $this->voucherCode = $this->voucherSelected->code;
+        $this->cart = Cart::session($this->sessionId);
+        if(!$this->voucherCode){
+            $this->totalTransaction = Cart::getTotal();
+            $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
+            $this->discount == null;
+        }else if($this->voucherSelected->type == 1){
+            $this->totalTransaction = Cart::getTotal();
+            $tax = ($this->totalTransaction * $this->tax / 100);
+            $total = Cart::getTotal() + $tax ;
+            $disc = $total - $this->voucherSelected->percentage;
+            $this->subTotal = $disc;
+            $this->discount = $this->voucherSelected->percentage;
+        }else if($this->voucherSelected->type == 2){
+            $this->totalTransaction = Cart::getTotal();
+            $tax = ($this->totalTransaction * $this->tax / 100);
+            $total = Cart::getTotal() + $tax ;
+            $disc = $total - ($total * $this->voucherSelected->percentage / 100);
+            $this->subTotal = $disc;
+            $this->discount = $total * $this->voucherSelected->percentage / 100;
+        }
+        $this->emit('hideModal');
+    }
+
+    public function removeVoucher(){
+        $this->voucherCode = null;
+        $this->voucherSelected = null;
+        $this->discount = null;
+        $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
+    }
 
     public function render()
     {
-        $products = Product::with(['categories'])->get();
         $this->cart = Cart::getContent()->toArray();
-        return view('livewire.transaction.transaction', compact('products'))
-                ->extends('layouts.dashboard')
+        return view('livewire.transaction.transaction')
+                ->extends('layouts.home')
                 ->section('content');
     }
 }

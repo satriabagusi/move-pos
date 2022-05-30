@@ -35,8 +35,8 @@
                             <td>
                                 @if ($item->status == 1)
                                     <span class="fw-bold text-success"> Aktif </span>
-                                @elseif($item->status == 2)
-                                    <span class="fw-bold text-secondary">Tidak Aktif</span>
+                                @elseif($item->status == 0)
+                                    <span class="fw-bold text-danger">Tidak Aktif</span>
                                 @endif
                             </td>
                             <td>
