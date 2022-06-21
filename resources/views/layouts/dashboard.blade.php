@@ -158,10 +158,10 @@
                 </a>
                 <ul class="submenu @yield('laporan')">
                     <li class="submenu-item @yield('laporan-pemasukan')">
-                        <a href="component-alert.html">Keuangan</a>
+                        <a href="{{URL::to('/laporan/keuangan')}}">Keuangan</a>
                     </li>
                     <li class="submenu-item @yield('laporan-pengeluaran')">
-                        <a href="component-badge.html">Produk</a>
+                        <a href="{{URL::to('/laporan/produk')}}">Produk</a>
                     </li>
                 </ul>
             </li>
@@ -195,7 +195,7 @@
                 </a>
                 <ul class="submenu @yield('pengaturan')">
                     <li class="submenu-item @yield('pengaturan-akun')">
-                        <a href="component-alert.html">Pengaturan Akun</a>
+                        <a href="{{URL::to('/pengaturan/pengaturan-akun')}}">Pengaturan Akun</a>
                     </li>
                     <li class="submenu-item @yield('pengaturan-aplikasi')">
                         <a href="{{URL::to('/pengaturan/pengaturan-aplikasi')}}">Pengaturan Aplikasi</a>
@@ -221,7 +221,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            {{-- <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                                 <li class="nav-item dropdown me-3">
                                     <a class="nav-link active dropdown-toggle text-gray-600" href="#" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -234,8 +234,8 @@
                                         <li><a class="dropdown-item">No notification available</a></li>
                                     </ul>
                                 </li>
-                            </ul>
-                            <div class="dropdown">
+                            </ul> --}}
+                            <div class="dropdown navbar-nav ms-auto mb-2 mb-lg-0">
                                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">

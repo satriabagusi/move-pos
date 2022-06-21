@@ -6,6 +6,9 @@ use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Discount\DiscountVoucher;
 use App\Http\Livewire\Product\ProductCategory;
 use \App\Http\Livewire\Product\ProductList;
+use App\Http\Livewire\Report\FinanceReport;
+use App\Http\Livewire\Report\ProductReport;
+use App\Http\Livewire\Setting\AccountSetting;
 use App\Http\Livewire\Setting\AppSetting;
 use App\Http\Livewire\Setting\SetupPage;
 use App\Http\Livewire\Transaction\Transaction;
@@ -53,7 +56,13 @@ if(Schema::hasTable('app_settings')){
             Route::get('/produk/data-produk', ProductList::class);
             Route::get('/transaksi', Transaction::class);
             Route::get('/diskon', DiscountVoucher::class);
+
             Route::get('/pengaturan/pengaturan-aplikasi', AppSetting::class);
+            Route::get('/pengaturan/pengaturan-akun', AccountSetting::class);
+
+            Route::get('/laporan/keuangan', FinanceReport::class);
+            Route::get('/laporan/produk', ProductReport::class);
+
         });
 
     }

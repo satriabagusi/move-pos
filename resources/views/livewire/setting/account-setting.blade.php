@@ -1,13 +1,13 @@
 @section('page-title', 'Pengaturan')
-@section('page-subtitle', 'Pengaturan Aplikasi')
+@section('page-subtitle', 'Pengaturan Akun')
 @section('pengaturan', 'active')
-@section('pengaturan-aplikasi', 'active')
+@section('pengaturan-akun', 'active')
 
 
 <div>
     <div class="card">
         <div class="card-header">
-            <span class="fs-4">Pengaturan Aplikasi</span>
+            <span class="fs-4">Pengaturan Akun</span>
         <hr>
         </div>
         <div class="card-body">
@@ -16,86 +16,67 @@
                 <div class="form-body">
                     <div class="row">
                         <div class="col-md-4">
-                            <label>Nama Toko</label>
+                            <label>Nama</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="text" id="shop_name" class="form-control @error('shop_name')
+                            <input type="text" id="name" class="form-control @error('name')
                                 is-invalid
-                            @enderror" placeholder="Nama Toko" wire:model="shop_name"
+                            @enderror" placeholder="Nama" wire:model="name"
                             @if ($editMode == false)
                                 readonly
                             @endif
                             >
-                            @error('shop_name')
+                            @error('name')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label>Alamat</label>
+                            <label>Username</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <textarea type="text" id="shop_address" class="form-control @error('shop_address')
+                            <textarea type="text" id="username" class="form-control @error('username')
                                 is-invalid
-                            @enderror" placeholder="Alamat" wire:model="shop_address"
+                            @enderror" placeholder="Username" wire:model="username"
                             @if ($editMode == false)
                                 readonly
                             @endif
                             ></textarea>
-                            @error('shop_address')
+                            @error('username')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label>Email Toko</label>
+                            <label>Password (*</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <input type="email" id="shop_email" class="form-control @error('shop_email')
+                            <input type="password" id="password" class="form-control @error('password')
                                 is-invalid
-                            @enderror" placeholder="Email" wire:model="shop_email"
+                            @enderror" placeholder="Password" wire:model="password"
                             @if ($editMode == false)
                                 readonly
                             @endif
                             >
-                            @error('shop_email')
+                            <small class="text-muted">*Kosongkan password jika tidak ingin di ubah</small>
+                            @error('password')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
                         <div class="col-md-4">
-                            <label>No Telp Toko</label>
+                            <label>Email</label>
                         </div>
                         <div class="col-md-8 form-group">
-                            <div class="input-group">
-                                <span class="input-group-text">+62</span>
-                                <input type="text" id="shop_phone" class="form-control @error('shop_phone')
+                            <input type="email" id="email" class="form-control @error('email')
                                 is-invalid
-                                @enderror" placeholder="No Telp" wire:model="shop_phone"
-                                @if ($editMode == false)
+                            @enderror" placeholder="Email" wire:model="email"
+                            @if ($editMode == false)
                                 readonly
-                                @endif
-                                >
-                                @error('shop_phone')
-                                <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <label>Pajak Transaksi</label>
-                        </div>
-                        <div class="col-md-8 form-group ">
-                            <div class="input-group">
-                                <input type="text" maxlength="4" max="100" id="tax" class="form-control @error('tax')
-                                    is-invalid
-                                @enderror" placeholder="Pajak Transaksi" wire:model="tax"
-                                @if ($editMode == false)
-                                    readonly
-                                @endif
-                                >
-                                <span class="input-group-text">%</span>
-                            </div>
-                            @error('tax')
+                            @endif
+                            >
+                            @error('email')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
                         </div>
+
                     </div>
                 </div>
             </form>
@@ -105,13 +86,13 @@
             @if ($editMode == true)
                 <button type="button" class="rounded float-end btn btn-sm icon icon-left btn-success" wire:click="save_settings">
                     <span >
-                        <i data-feather="check"></i> Simpan Pengaturan
+                        <i data-feather="check"></i> Simpan Perubahan
                     </span>
                 </button>
             @elseif($editMode == false)
                 <button type="button" class="rounded float-end btn btn-sm icon icon-left btn-outline-primary" wire:click="edit_mode" >
                     <span >
-                        <i data-feather="edit"></i> Ubah Pengaturan
+                        <i data-feather="edit"></i> Ubah Detail Akun
                     </span>
                 </button>
             @endif
@@ -151,14 +132,6 @@
                 }
             })
 
-            window.addEventListener('swal:confirm', function(e){
-                Swal.fire(e.detail)
-                .then((result) => {
-                    if(result.isConfirmed) {
-                        window.livewire.emit('deleteProduct', e.detail.id);
-                    }
-                });
-            });
 
             $(document).ready(function(){
                 $('#shop_phone').mask('000-0000-0000');
