@@ -120,7 +120,7 @@
             {{-- <li class="sidebar-title">Menu</li> --}}
 
             <li class="sidebar-item @yield('home')">
-                <a href="index.html" class='sidebar-link'>
+                <a href="/" class='sidebar-link'>
                     <i class="bi bi-grid-fill"></i>
                     <span>Home</span>
                 </a>
@@ -146,7 +146,7 @@
                         <a href="{{URL::to('/produk/data-produk')}}">Data Produk</a>
                     </li>
                     <li class="submenu-item @yield('pembelian-produk')">
-                        <a href="component-badge.html">Pembelian Produk</a>
+                        <a href="{{URL::to('/produk/pembelian-produk')}}">Pembelian Produk</a>
                     </li>
                 </ul>
             </li>
@@ -157,10 +157,10 @@
                     <span>Laporan</span>
                 </a>
                 <ul class="submenu @yield('laporan')">
-                    <li class="submenu-item @yield('laporan-pemasukan')">
+                    <li class="submenu-item @yield('laporan-keuangan')">
                         <a href="{{URL::to('/laporan/keuangan')}}">Keuangan</a>
                     </li>
-                    <li class="submenu-item @yield('laporan-pengeluaran')">
+                    <li class="submenu-item @yield('laporan-produk')">
                         <a href="{{URL::to('/laporan/produk')}}">Produk</a>
                     </li>
                 </ul>
@@ -180,10 +180,10 @@
                 </a>
                 <ul class="submenu @yield('pegawai')">
                     <li class="submenu-item @yield('data-pegawai')">
-                        <a href="component-alert.html">Data Pegawai</a>
+                        <a href="{{URL::to('/pegawai/data-pegawai')}}">Data Pegawai</a>
                     </li>
                     <li class="submenu-item @yield('akun-pegawai')">
-                        <a href="component-badge.html">Akun Pegawai</a>
+                        <a href="{{URL::to('/pegawai/akun-pegawai')}}">Akun Pegawai</a>
                     </li>
                 </ul>
             </li>

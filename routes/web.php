@@ -6,8 +6,11 @@ use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Discount\DiscountVoucher;
 use App\Http\Livewire\Product\ProductCategory;
 use \App\Http\Livewire\Product\ProductList;
+use App\Http\Livewire\Product\ProductPurchase;
 use App\Http\Livewire\Report\FinanceReport;
 use App\Http\Livewire\Report\ProductReport;
+use App\Http\Livewire\Employee\EmployeeData;
+use App\Http\Livewire\Employee\EmployeeAccount;
 use App\Http\Livewire\Setting\AccountSetting;
 use App\Http\Livewire\Setting\AppSetting;
 use App\Http\Livewire\Setting\SetupPage;
@@ -54,6 +57,8 @@ if(Schema::hasTable('app_settings')){
             Route::get('/', Dashboard::class);
             Route::get('/produk/kategori-produk', ProductCategory::class);
             Route::get('/produk/data-produk', ProductList::class);
+            Route::get('/produk/pembelian-produk', ProductPurchase::class);
+
             Route::get('/transaksi', Transaction::class);
             Route::get('/diskon', DiscountVoucher::class);
 
@@ -62,6 +67,9 @@ if(Schema::hasTable('app_settings')){
 
             Route::get('/laporan/keuangan', FinanceReport::class);
             Route::get('/laporan/produk', ProductReport::class);
+
+            Route::get('/pegawai/data-pegawai', EmployeeData::class);
+            Route::get('/pegawai/akun-pegawai', EmployeeAccount::class);
 
         });
 
@@ -84,5 +92,6 @@ if(Schema::hasTable('app_settings')){
         };
     })->where('any', '.*');
 }
+
 
 

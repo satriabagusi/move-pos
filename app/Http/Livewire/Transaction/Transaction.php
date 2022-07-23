@@ -6,6 +6,8 @@ use App\AppSetting;
 use App\Category;
 use App\Discount;
 use App\Http\Livewire\Product\ProductCategory;
+use App\Order;
+use App\OrderDetail;
 use App\Product;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
 use Illuminate\Support\Facades\Auth;
@@ -13,23 +15,23 @@ use Livewire\Component;
 
 class Transaction extends Component
 {
-    public $cart, $vouchers, $voucherSelected;
+    public $cart, $vouchers, $voucherSelected, $customer_name, $search, $products, $subTotal, $discount, $discountType, $discount_feature;
     public $sessionId, $qty, $no, $tax, $voucherCode, $totalTransaction = 0;
-    public $search;
-    public $products;
-    public $subTotal;
-    public $discount, $discountType;
+    public $appSetting, $invoice_no, $sectionCond, $total_pay;
 
     public function mount(){
         $this->sessionId = Auth::user()->id;
         $this->tax = AppSetting::select('tax')->first()->tax;
-
+        $this->appSetting = AppSetting::first();
         $this->vouchers = Discount::all();
         $this->cart = Cart::session($this->sessionId);
         $this->totalTransaction = Cart::getTotal();
         $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
 
         $this->products = Product::with(['categories'])->get();
+
+        $this->invoice_no = rand(1000,9999)."0".$this->sessionId.date("dmY");
+
     }
 
     protected $listeners = ['updateVoucher'];
@@ -97,9 +99,6 @@ class Transaction extends Component
 
     public function deleteItem($id){
         $removeItem = Cart::session($this->sessionId)->remove($id);
-        $this->totalTransaction = Cart::getTotal();
-        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
-
         if($removeItem){
             $this->dispatchBrowserEvent('message', [
                 'status' => 200 ,
@@ -111,6 +110,8 @@ class Transaction extends Component
                 'message' => 'Gagal menghapus barang dari Keranjang'
             ]);
         }
+        $this->totalTransaction = Cart::getTotal();
+        $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
     }
 
     public function updatedSearch(){
@@ -123,7 +124,48 @@ class Transaction extends Component
     }
 
     public function checkoutCart(){
-        dd($this->cart);
+
+        $this->cart = Cart::session($this->sessionId);
+
+        // $insertOrder = Order::create([
+        //     'invoice' => $this->invoice_no,
+        //     'total' => $this->totalTransaction,
+        //     'payment_type' => 'cash',
+        //     'customer_name' => $this->customer_name,
+        //     'user_id' => $this->sessionId,
+        //     'discount_id' => $this->voucherSelected ? $this->voucherSelected->id : null,
+        // ]);
+
+        // for ($i=1; $i <= count($this->cart) ; $i++) {
+        //     $insertOrderDetail = OrderDetail::create([
+        //         'quantity' => $this->cart[$i]['quantity'],
+        //         'price' => $this->cart[$i]['price'],
+        //         'product_id' => $this->cart[$i]['id'],
+        //         'order_id' => $insertOrder->id,
+        //     ]);
+        // }
+
+        $this->emit('showResiModal');
+        // if($insertOrder && $insertOrderDetail) {
+        //     $this->subTotal = 0;
+        //     $this->totalTransaction = 0;
+        //     $this->voucherSelected = null;
+        //     Cart::session($this->sessionId)->clear();
+        //     $this->cart = Cart::session($this->sessionId);
+
+        //     $this->dispatchBrowserEvent('message', [
+        //         'status' => 200 ,
+        //         'message' => 'Berhasil input transaksi'
+        //     ]);
+
+
+        // }else{
+        //     $this->dispatchBrowserEvent('message', [
+        //         'status' => 100 ,
+        //         'message' => 'Gagal input transaksi'
+        //     ]);
+
+        // }
     }
 
     public function updatedVoucherCode(){

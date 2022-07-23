@@ -11,6 +11,6 @@ class Dashboard extends Component
     {
         return view('livewire.dashboard')
             ->extends('layouts.dashboard')
-            ->section('contents');
+            ->section('content');
     }
 }
