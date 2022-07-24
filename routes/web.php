@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
+use \App\Http\Livewire\Counter;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -54,6 +57,9 @@ if(Schema::hasTable('app_settings')){
             Route::get('/', Dashboard::class);
             Route::get('/produk/kategori-produk', ProductCategory::class);
             Route::get('/produk/data-produk', ProductList::class);
+            Route::get('/produk/counter', Counter::class);
+
+
             Route::get('/transaksi', Transaction::class);
             Route::get('/diskon', DiscountVoucher::class);
 
@@ -84,5 +90,6 @@ if(Schema::hasTable('app_settings')){
         };
     })->where('any', '.*');
 }
+
 
 

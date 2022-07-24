@@ -88,6 +88,34 @@
                 </div>
             </div>
         </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="fs-4">Laporan Keuangan Bulanan</span>
+                <hr>
+                </div>
+                <div class="card-body">
+                    <div id="monthly-sale"></div>
+                </div>
+                <div class="card-footer border-top-0">
+
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="fs-4">Laporan Keuangan Tahunan</span>
+                <hr>
+                </div>
+                <div class="card-body">
+                    <div id="annually-sale"></div>
+                </div>
+                <div class="card-footer border-top-0">
+
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -97,6 +125,23 @@
     <script src="{{asset('js/extensions/apexcharts.js')}}"></script>
 
         <script>
+            function randNumberPemasukan(){
+                return Math.floor(Math.random() * 1000000);
+            };
+
+            function randNumberPengeluaran(){
+                return Math.floor(Math.random() * 1000000);
+            };
+
+            function formatRupiah(angka, prefix){
+                const numb = angka;
+                const format = numb.toString().split('').reverse().join('');
+                const convert = format.match(/\d{1,3}/g);
+                const rupiah = prefix + convert.join('.').split('').reverse().join('');
+
+                return rupiah;
+            }
+
             window.addEventListener('message', e => {
                 if(e.detail.status == 200){
                     Toastify({
@@ -134,11 +179,11 @@
                     series: [
                         {
                             name: "Pemasukan",
-                            data: [275000, 145250, 187500, 48900, 67450, 425000, 125600],
+                            data: [randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan()],
                         },
                         {
                             name: "Pengeluaran",
-                            data: [76000, 85000, 101000, 98000, 87000, 105000, 91000],
+                            data: [randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran()],
                         },
                     ],
                     chart: { type: "bar", height: 350 },
@@ -167,7 +212,98 @@
                     tooltip: {
                         y: {
                             formatter: function (t) {
-                                return "Rp. " + t ;
+                                return formatRupiah(t, "Rp. ") ;
+                            },
+                        },
+                    },
+                    colors: ['#56B6F7', '#F3616D']
+                });
+
+            var monthlySaleChart = new ApexCharts(document.querySelector('#monthly-sale'), {
+                    series: [
+                        {
+                            name: "Pemasukan",
+                            data: [randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan()],
+                        },
+                        {
+                            name: "Pengeluaran",
+                            data: [randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran()],
+                        },
+                    ],
+                    chart: { type: "bar", height: 350 },
+                    plotOptions: {
+                        bar: {
+                            horizontal: !1,
+                            columnWidth: "55%",
+                            endingShape: "rounded",
+                        },
+                    },
+                    dataLabels: { enabled: !1 },
+                    stroke: { show: !0, width: 2, colors: ["transparent"] },
+                    xaxis: {
+                        categories: [
+                            "Minggu 1",
+                            "Minggu 2",
+                            "Minggu 3",
+                            "Minggu 4"
+                        ],
+                    },
+                    yaxis: { title: { text: "Rp (thousands)" } },
+                    fill: { opacity: 1 },
+                    tooltip: {
+                        y: {
+                            formatter: function (t) {
+                                return formatRupiah(t, "Rp. ") ;
+                            },
+                        },
+                    },
+                    colors: ['#56B6F7', '#F3616D']
+                });
+
+            var annuallySaleChart = new ApexCharts(document.querySelector('#annually-sale'), {
+                    series: [
+                        {
+                            name: "Pemasukan",
+                            data: [randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan()
+                            ],
+                        },
+                        {
+                            name: "Pengeluaran",
+                            data: [randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran()
+                            ],
+                        },
+                    ],
+                    chart: { type: "bar", height: 350 },
+                    plotOptions: {
+                        bar: {
+                            horizontal: !1,
+                            columnWidth: "55%",
+                            endingShape: "rounded",
+                        },
+                    },
+                    dataLabels: { enabled: !1 },
+                    stroke: { show: !0, width: 2, colors: ["transparent"] },
+                    xaxis: {
+                        categories: [
+                            "Januari",
+                            "Februari",
+                            "Maret",
+                            "April",
+                            "Mei",
+                            "Juni",
+                            "Juli",
+                            "Agustus",
+                            "September",
+                            "November",
+                            "Desember",
+                        ],
+                    },
+                    yaxis: { title: { text: "Rp (thousands)" } },
+                    fill: { opacity: 1 },
+                    tooltip: {
+                        y: {
+                            formatter: function (t) {
+                                return formatRupiah(t, "Rp. ") ;
                             },
                         },
                     },
@@ -175,6 +311,8 @@
                 });
 
                 dailySaleChart.render();
+                monthlySaleChart.render();
+                annuallySaleChart.render();
 
 
         </script>

@@ -92,9 +92,19 @@
                                 >
                                 <span class="input-group-text">%</span>
                             </div>
+                            <small>*Non aktifkan pajak transaksi dengan mengisi pajak transaksi dengan angka 0</small>
                             @error('tax')
                                 <span class="text-danger">{{$message}}</span>
                             @enderror
+                        </div>
+                        <div class="col-md-4">
+                            <label for="">Fitur Diskon</label>
+                        </div>
+                        <div class="col-md-8 form-group ">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" wire:model="disc_mode">
+                                <label class="form-check-label" for="flexSwitchCheckChecked">Active</label>
+                            </div>
                         </div>
                     </div>
                 </div>

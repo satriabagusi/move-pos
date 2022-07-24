@@ -146,7 +146,7 @@
                         <a href="{{URL::to('/produk/data-produk')}}">Data Produk</a>
                     </li>
                     <li class="submenu-item @yield('pembelian-produk')">
-                        <a href="component-badge.html">Pembelian Produk</a>
+                        <a href="{{URL::to('/produk/counter')}}">Pembelian Produk</a>
                     </li>
                 </ul>
             </li>

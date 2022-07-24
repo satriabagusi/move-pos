@@ -10,6 +10,7 @@ class AppSetting extends Component
 
     public $shop_name, $shop_address, $shop_email, $shop_phone, $tax;
     public $editMode = false;
+    public $disc_mode = false;
 
     protected $rules = [
         'shop_name' => 'required',
@@ -35,7 +36,7 @@ class AppSetting extends Component
     public function mount(){
         $settings = App_Setting::first();
         // dd($settings);
-        if(!$settings || $settings->shop_name == "" || $settings->shop_address == "" || $settings->shop_phone == "" || $settings->tax == "" ){
+        if(!$settings){
             $this->edit_mode = true;
         }else{
             $this->shop_name = $settings->shop_name;
@@ -48,6 +49,10 @@ class AppSetting extends Component
 
     public function edit_mode(){
         $this->editMode = true;
+    }
+
+    public function updatedDiscMode($value){
+        return $value;
     }
 
     public function save_settings(){
