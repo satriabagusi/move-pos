@@ -1,5 +1,21 @@
+@section('page-title', 'Home Co')
+@section('page-subtitle', 'Daftar Kategori Produk')
+@section('home', 'active')
+@section('kategori-produk', 'active')
+
 <div>
-    {{-- If you look to others for fulfillment, you will never truly be fulfilled. --}}
+    <div class="card">
+        <div class="card-header">
+            Kategori Produk fsf
+        </div>
+        <div class="card-body">
+
+        </div>
+        <div class="card-footer">
+            <p>Oke</p>
+        </div>
+    </div>
+
 </div>
 
 

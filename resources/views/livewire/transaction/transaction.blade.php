@@ -169,6 +169,8 @@
 
             window.livewire.on('showResiModal', () => {
                 $('#modalResiTransaksi').modal('show');
-            })
+            });
+
+            $('.money-pay').mask("#.##0", {reverse: true});
         </script>
 @endpush
