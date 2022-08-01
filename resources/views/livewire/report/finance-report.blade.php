@@ -16,8 +16,8 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h6 class="text-muted font-semibold">Penjualan (Hari)</h6>
-                            <h6 class="font-extrabold mb-0">112.000</h6>
+                            <h6 class="text-muted font-semibold">Penjualan Hari Ini {{date("d-m-Y")}}</h6>
+                            <h6 class="font-extrabold mb-0">Rp. {{number_format($daily_sales, 0, "", ".")}}</h6>
                         </div>
                     </div>
                 </div>

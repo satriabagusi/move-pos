@@ -17,7 +17,7 @@ class Transaction extends Component
 {
     public $cart, $vouchers, $voucherSelected, $customer_name, $search, $products, $subTotal, $discount, $discountType, $discount_feature;
     public $sessionId, $qty, $no, $tax, $voucherCode, $totalTransaction = 0;
-    public $appSetting, $invoice_no, $sectionCond, $total_pay;
+    public $appSetting, $invoice_no, $sectionCond, $total_pay, $pay_change, $cart_resi;
 
     public function mount(){
         $this->sessionId = Auth::user()->id;
@@ -25,16 +25,18 @@ class Transaction extends Component
         $this->appSetting = AppSetting::first();
         $this->vouchers = Discount::all();
         $this->cart = Cart::session($this->sessionId);
+        $this->cart_resi = $this->cart;
         $this->totalTransaction = Cart::getTotal();
         $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
 
         $this->products = Product::with(['categories'])->get();
 
         $this->invoice_no = rand(1000,9999)."0".$this->sessionId.date("dmY");
+        $this->pay_change = 0;
 
     }
 
-    protected $listeners = ['updateVoucher'];
+    protected $listeners = ['updateVoucher', 'printResi'];
 
     public function addToCart($id){
         $product = Product::where('id', $id)->select('id', 'product_code', 'name', 'price')->first();
@@ -121,55 +123,93 @@ class Transaction extends Component
                     ->orWhere('description', 'like', '%'.$this->search.'%')
                     ->get();
         $this->cart = Cart::session($this->sessionId);
+        $this->cart_resi = $this->cart;
+
+    }
+
+    public function updatedTotalPay(){
+        $this->pay_change = str_replace(".", "", $this->total_pay) - $this->subTotal;
+        $this->cart = Cart::session($this->sessionId);
+        $this->cart_resi = $this->cart;
+        $tp = str_replace(".", "", $this->total_pay);
+        $this->total_pay = number_format($tp, 0, ",", ".");
+    }
+
+    public function pay(){
+        $this->cart = Cart::session($this->sessionId);
+        $this->emit('showResiModal');
     }
 
     public function checkoutCart(){
 
-        $this->cart = Cart::session($this->sessionId);
+        $this->pay_change = str_replace(".", "", $this->total_pay) - $this->subTotal;
 
-        // $insertOrder = Order::create([
-        //     'invoice' => $this->invoice_no,
-        //     'total' => $this->totalTransaction,
-        //     'payment_type' => 'cash',
-        //     'customer_name' => $this->customer_name,
-        //     'user_id' => $this->sessionId,
-        //     'discount_id' => $this->voucherSelected ? $this->voucherSelected->id : null,
-        // ]);
+        if(str_replace(".", "", $this->total_pay) >= $this->subTotal){
+            $this->cart = Cart::session($this->sessionId);
+            $this->cart_resi = Cart::getContent()->toArray();
 
-        // for ($i=1; $i <= count($this->cart) ; $i++) {
-        //     $insertOrderDetail = OrderDetail::create([
-        //         'quantity' => $this->cart[$i]['quantity'],
-        //         'price' => $this->cart[$i]['price'],
-        //         'product_id' => $this->cart[$i]['id'],
-        //         'order_id' => $insertOrder->id,
-        //     ]);
-        // }
+            $insertOrder = Order::create([
+                'invoice' => $this->invoice_no,
+                'total' => $this->totalTransaction,
+                'payment_type' => 'cash',
+                'customer_name' => $this->customer_name,
+                'user_id' => $this->sessionId,
+                'discount_id' => $this->voucherSelected ? $this->voucherSelected->id : null,
+            ]);
 
-        $this->emit('showResiModal');
-        // if($insertOrder && $insertOrderDetail) {
-        //     $this->subTotal = 0;
-        //     $this->totalTransaction = 0;
-        //     $this->voucherSelected = null;
-        //     Cart::session($this->sessionId)->clear();
-        //     $this->cart = Cart::session($this->sessionId);
-
-        //     $this->dispatchBrowserEvent('message', [
-        //         'status' => 200 ,
-        //         'message' => 'Berhasil input transaksi'
-        //     ]);
+            for ($i=1; $i <= count($this->cart_resi) ; $i++) {
+                $insertOrderDetail = OrderDetail::create([
+                    'quantity' => $this->cart_resi[$i]['quantity'],
+                    'price' => $this->cart_resi[$i]['price'],
+                    'product_id' => $this->cart_resi[$i]['id'],
+                    'order_id' => $insertOrder->id,
+                ]);
+                $updateStock = Product::where('id', $this->cart_resi[$i]['id'])
+                                ->decrement('stock', $this->cart_resi[$i]['quantity']);
+            }
 
 
-        // }else{
-        //     $this->dispatchBrowserEvent('message', [
-        //         'status' => 100 ,
-        //         'message' => 'Gagal input transaksi'
-        //     ]);
+            if($insertOrder && $insertOrderDetail && $updateStock) {
+                $this->subTotal = 0;
+                $this->totalTransaction = 0;
+                $this->voucherSelected = null;
+                Cart::session($this->sessionId)->clear();
+                $this->cart = Cart::session($this->sessionId);
+                $this->sectionCond = 0;
 
-        // }
+                $this->dispatchBrowserEvent('message', [
+                    'status' => 200 ,
+                    'message' => 'Berhasil input transaksi'
+                ]);
+
+            // $this->emit('printResi');
+
+                $this->products = Product::with(['categories'])->get();
+
+            }else{
+                $this->dispatchBrowserEvent('message', [
+                    'status' => 100 ,
+                    'message' => 'Gagal input transaksi'
+                ]);
+
+            }
+
+        }else{
+            $this->dispatchBrowserEvent('message', [
+                'status' => 100 ,
+                'message' => 'Jumlah Pembayaran kurang dari jumlah transaksi !'
+            ]);
+        }
+
+    }
+
+    public function removeResiCart(){
+        $this->cart_resi = [];
     }
 
     public function updatedVoucherCode(){
         $this->cart = Cart::session($this->sessionId);
+        $this->cart_resi = $this->cart;
         // dd($this->voucherSelected);
 
         if(!$this->voucherCode){
@@ -197,6 +237,7 @@ class Transaction extends Component
         $this->voucherSelected = Discount::where('id', $id)->first();
         $this->voucherCode = $this->voucherSelected->code;
         $this->cart = Cart::session($this->sessionId);
+        $this->cart_resi = $this->cart;
         if(!$this->voucherCode){
             $this->totalTransaction = Cart::getTotal();
             $this->subTotal = Cart::getTotal() + ($this->totalTransaction * $this->tax / 100) ;
@@ -221,7 +262,10 @@ class Transaction extends Component
 
     public function updatedSectionCond(){
         $this->cart = Cart::session($this->sessionId);
+        $this->cart_resi = $this->cart;
+        $this->products = Product::with(['categories'])->get();
     }
+
 
     public function removeVoucher(){
         $this->voucherCode = null;
@@ -234,6 +278,7 @@ class Transaction extends Component
     public function render()
     {
         $this->cart = Cart::getContent()->toArray();
+        $this->cart_resi =  Cart::getContent()->toArray();
         return view('livewire.transaction.transaction')
                 ->extends('layouts.home')
                 ->section('content');

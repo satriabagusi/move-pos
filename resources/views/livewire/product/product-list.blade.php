@@ -23,6 +23,7 @@
                             <th width="">Kategori Produk</th>
                             <th>Harga</th>
                             <th width="">Deskripsi</th>
+                            <th>Stock</th>
                             <th>Opsi</th>
                         </tr>
                     </thead>
@@ -41,6 +42,7 @@
                                 <p class="fs-4">Rp. {{ number_format($item->price, 0, ',' ,'.')}}</p>
                             </td>
                             <td >{{$item->description}}</td>
+                            <td>{{$item->stock}}</td>
                             <td>
                                 <button type="button" class="btn btn-sm icon icon-left btn-primary"  data-bs-toggle="modal" data-bs-target="#editForm" wire:click="editProduct({{$item->id}})" wire:ignore>
                                     <span wire:ignore>
@@ -70,6 +72,7 @@
             </button>
         </div>
     </div>
+
 
     <div wire:ignore.self class="modal fade text-left" id="editForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">

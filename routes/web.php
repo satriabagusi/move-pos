@@ -60,12 +60,7 @@ if(Schema::hasTable('app_settings')){
             Route::get('/', Dashboard::class);
             Route::get('/produk/kategori-produk', ProductCategory::class);
             Route::get('/produk/data-produk', ProductList::class);
-<<<<<<< HEAD
-            Route::get('/produk/counter', Counter::class);
-
-=======
             Route::get('/produk/pembelian-produk', ProductPurchase::class);
->>>>>>> a86beb1cab0a5c781e07b34afaaa52a727c70cfd
 
             Route::get('/transaksi', Transaction::class);
             Route::get('/diskon', DiscountVoucher::class);

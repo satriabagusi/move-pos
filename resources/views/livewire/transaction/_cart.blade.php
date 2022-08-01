@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<div class="col-12 col-lg-4 col-md-6 col-xs-12 card shadow mt-1" style="max-height: 800px; height: 800px">
-=======
-<div class="col-12 col-md-6 col-xs-12 card shadow mt-1" style="max-height: 800px; height: 800px">
->>>>>>> a86beb1cab0a5c781e07b34afaaa52a727c70cfd
+<div class="col-12 col-lg-5 col-md-6 col-xs-12 card shadow mt-1" style="max-height: 800px; height: 800px">
 
     <div class="card-body scroll">
     <h4 class="mt-1">Rincian Pesanan</h4>
@@ -70,6 +66,7 @@
                 <span class="fw-bold text-success">Rp. {{number_format($totalTransaction, 0, ',', '.')}}</span>
             </div>
         </div>
+        @if ($this->tax > 0)
         <div class="row justify-content-between">
             <div class="col-3 col-lg-4">
                 <p>Pajak {{$tax}}%</p>
@@ -78,6 +75,7 @@
                 <span class="fw-bold">Rp. {{number_format($totalTransaction*$tax/100, 0, ',', '.')}}</span>
             </div>
         </div>
+        @endif
         <div class="row justify-content-between">
             <div class="col-3 col-lg-4">
                 <p>Kupon :</p>
@@ -113,7 +111,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-12 mb-sm-2">
-                <button wire:click="$set('sectionCond', '1')" class="btn btn-block btn-success">Bayar</button>
+                <button wire:click="$set('sectionCond', 1)" class="btn btn-block btn-success">Bayar</button>
             </div>
         </div>
     </div>
