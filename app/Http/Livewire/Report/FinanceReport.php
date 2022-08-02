@@ -14,6 +14,7 @@ class FinanceReport extends Component
 
     public function mount(){
         $this->daily_sales = Order::whereDate('created_at', Carbon::today())->sum('total');
+        $this->monthly_sales = Order::whereBetween('created_at', [Carbon::now()->firstOfMonth(), Carbon::now()->lastOfMonth()])->sum('total');
     }
 
     public function render()

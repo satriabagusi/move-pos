@@ -146,7 +146,9 @@ class Transaction extends Component
 
         if(str_replace(".", "", $this->total_pay) >= $this->subTotal){
             $this->cart = Cart::session($this->sessionId);
-            $this->cart_resi = Cart::getContent()->toArray();
+            $this->cart_resi = array_values(Cart::getContent()->toArray());
+
+            // dd($this->cart_resi);
 
             $insertOrder = Order::create([
                 'invoice' => $this->invoice_no,
@@ -157,7 +159,7 @@ class Transaction extends Component
                 'discount_id' => $this->voucherSelected ? $this->voucherSelected->id : null,
             ]);
 
-            for ($i=1; $i <= count($this->cart_resi) ; $i++) {
+            for ($i=0; $i < count($this->cart_resi) ; $i++) {
                 $insertOrderDetail = OrderDetail::create([
                     'quantity' => $this->cart_resi[$i]['quantity'],
                     'price' => $this->cart_resi[$i]['price'],
