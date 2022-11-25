@@ -32,7 +32,7 @@
 
     <style>
         .scroll{
-            max-height: 760px;
+            max-height: 600px;
             max-width: 100%;
             overflow-y:auto;
         }

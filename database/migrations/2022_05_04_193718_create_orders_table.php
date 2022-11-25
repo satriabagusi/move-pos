@@ -18,9 +18,9 @@ class CreateOrdersTable extends Migration
             $table->string('invoice');
             $table->float('total');
             $table->enum('payment_type', ['cash', 'online']);
-            $table->string('customer_name', 100);
+            $table->string('customer_name', 100)->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('discount_id');
+            $table->unsignedBigInteger('discount_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

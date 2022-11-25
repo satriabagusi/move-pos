@@ -18,5 +18,11 @@ class UserRoleSeeder extends Seeder
             'created_at' => today(),
             'updated_at' => today()
         ]);
+
+        DB::table('user_roles')->insert([
+            'role_name' => 'Cashier',
+            'created_at' => today(),
+            'updated_at' => today()
+        ]);
     }
 }

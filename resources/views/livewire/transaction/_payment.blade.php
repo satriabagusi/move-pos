@@ -100,7 +100,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-around">
-                    <button class="btn btn-sm btn-outline-primary">20.000</button>
+                    <button class="btn btn-sm btn-outline-primary" wire:click="$set('total_pay', '20.000')" >20.000</button>
                     <button class="btn btn-sm btn-outline-primary" wire:click="$set('total_pay', '50.000')">50.000</button>
                     <button class="btn btn-sm btn-outline-primary" wire:click="$set('total_pay', '100.000')">100.000</button>
                     <button class="btn btn-sm btn-outline-primary" wire:click="$set('total_pay', '200.000')">200.000</button>

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Setting;
 
 use App\AppSetting as App_Setting;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class AppSetting extends Component
@@ -91,9 +92,15 @@ class AppSetting extends Component
 
     public function render()
     {
-        $setting = AppSetting::all();
-        return view('livewire.setting.app-setting', compact('setting'))
+
+        if (Auth::user()->user_role_id == 1) {
+            $setting = AppSetting::all();
+            return view('livewire.setting.app-setting', compact('setting'))
                 ->extends('layouts.dashboard')
                 ->section('content');
+        }else{
+            return abort(403, "You're not allowed access this page!");
+        }
+
     }
 }

@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
 use \App\Http\Livewire\Counter;
-
+use App\Http\Livewire\Report\ExpenseReport;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,21 +58,33 @@ if(Schema::hasTable('app_settings')){
             Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
             Route::get('/', Dashboard::class);
-            Route::get('/produk/kategori-produk', ProductCategory::class);
-            Route::get('/produk/data-produk', ProductList::class);
-            Route::get('/produk/pembelian-produk', ProductPurchase::class);
+
+            Route::group(['prefix' => 'produk'], function(){
+                Route::get('/kategori-produk', ProductCategory::class);
+                Route::get('/data-produk', ProductList::class);
+                Route::get('/pembelian-produk', ProductPurchase::class);
+            });
 
             Route::get('/transaksi', Transaction::class);
             Route::get('/diskon', DiscountVoucher::class);
 
-            Route::get('/pengaturan/pengaturan-aplikasi', AppSetting::class);
-            Route::get('/pengaturan/pengaturan-akun', AccountSetting::class);
+            Route::group(['prefix' => 'pengaturan'], function(){
+                Route::get('/aplikasi', AppSetting::class);
+                Route::get('/akun', AccountSetting::class);
+            });
 
-            Route::get('/laporan/keuangan', FinanceReport::class);
-            Route::get('/laporan/produk', ProductReport::class);
 
-            Route::get('/pegawai/data-pegawai', EmployeeData::class);
-            Route::get('/pegawai/akun-pegawai', EmployeeAccount::class);
+            Route::group(['prefix' => 'laporan'], function(){
+                Route::get('/pengeluaran', ExpenseReport::class);
+                Route::get('/keuangan', FinanceReport::class);
+                Route::get('/produk', ProductReport::class);
+            });
+
+            Route::group(['prefix' => 'pegawai'], function(){
+                Route::get('/data-pegawai', EmployeeData::class);
+                Route::get('/akun-pegawai', EmployeeAccount::class);
+            });
+
 
         });
 

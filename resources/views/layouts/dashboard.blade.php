@@ -7,6 +7,7 @@
     <title>Move POS</title>
 
     <link rel="stylesheet" href="{{asset('css/main/app.css')}}">
+    <link rel="stylesheet" href="{{asset('css/main/app-dark.css')}}">
     <link rel="apple-touch-icon" sizes="57x57" href="{{asset('images/logo/apple-icon-57x57.png')}}">
     <link rel="apple-touch-icon" sizes="60x60" href="{{asset('images/logo/apple-icon-60x60.png')}}">
     <link rel="apple-touch-icon" sizes="72x72" href="{{asset('images/logo/apple-icon-72x72.png')}}">
@@ -30,6 +31,7 @@
     <link rel="stylesheet" href="{{asset('css/pages/toastify.css')}}">
     <link rel="stylesheet" href="{{asset('css/pages/sweetalert2.css')}}">
     <link rel="stylesheet" href="{{asset('css/pages/form-element-select.css')}}">
+    <link rel="stylesheet" href="{{asset('vendor/select2/css/select2.min.css')}}">
     @livewireStyles()
 
     <style>
@@ -145,9 +147,11 @@
                     <li class="submenu-item @yield('data-produk')">
                         <a href="{{URL::to('/produk/data-produk')}}">Data Produk</a>
                     </li>
-                    <li class="submenu-item @yield('pembelian-produk')">
-                        <a href="{{URL::to('/produk/pembelian-produk')}}">Pembelian Produk</a>
-                    </li>
+                    @if (Auth::user()->user_role_id == 1)
+                        <li class="submenu-item @yield('pembelian-produk')">
+                            <a href="{{URL::to('/produk/pembelian-produk')}}">Pembelian Produk</a>
+                        </li>
+                    @endif
                 </ul>
             </li>
 
@@ -157,36 +161,43 @@
                     <span>Laporan</span>
                 </a>
                 <ul class="submenu @yield('laporan')">
+                    {{-- <li class="submenu-item @yield('catat-pengeluaran')">
+                        <a href="{{URL::to('/laporan/pengeluaran')}}">Catat Pengeluaran</a>
+                    </li> --}}
                     <li class="submenu-item @yield('laporan-keuangan')">
                         <a href="{{URL::to('/laporan/keuangan')}}">Keuangan</a>
                     </li>
                     <li class="submenu-item @yield('laporan-produk')">
-                        <a href="{{URL::to('/laporan/produk')}}">Produk</a>
+                        <a href="{{URL::to('/laporan/produk')}}">Produk Terjual</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="sidebar-item @yield('diskon')">
-                <a href="{{URL::to('/diskon')}}" class='sidebar-link'>
-                    <i class="bi bi-percent"></i>
-                    <span>Voucher Diskon</span>
-                </a>
-            </li>
+            @if (App\AppSetting::checkDiscountFeatures())
+                <li class="sidebar-item @yield('diskon')">
+                    <a href="{{URL::to('/diskon')}}" class='sidebar-link'>
+                        <i class="bi bi-percent"></i>
+                        <span>Voucher Diskon</span>
+                    </a>
+                </li>
+            @endif
 
-            <li class="sidebar-item has-sub @yield('pegawai')">
-                <a href="#" class='sidebar-link'>
-                    <i class="bi bi-people-fill"></i>
-                    <span>Pegawai</span>
-                </a>
-                <ul class="submenu @yield('pegawai')">
-                    <li class="submenu-item @yield('data-pegawai')">
-                        <a href="{{URL::to('/pegawai/data-pegawai')}}">Data Pegawai</a>
-                    </li>
-                    <li class="submenu-item @yield('akun-pegawai')">
-                        <a href="{{URL::to('/pegawai/akun-pegawai')}}">Akun Pegawai</a>
-                    </li>
-                </ul>
-            </li>
+            @if ( Auth::user()->user_role_id == 1)
+                <li class="sidebar-item has-sub @yield('pegawai')">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-people-fill"></i>
+                        <span>Pegawai</span>
+                    </a>
+                    <ul class="submenu @yield('pegawai')">
+                        <li class="submenu-item @yield('data-pegawai')">
+                            <a href="{{URL::to('/pegawai/data-pegawai')}}">Data Pegawai</a>
+                        </li>
+                        <li class="submenu-item @yield('akun-pegawai')">
+                            <a href="{{URL::to('/pegawai/akun-pegawai')}}">Akun Pegawai</a>
+                        </li>
+                    </ul>
+                </li>
+            @endif
 
             <li class="sidebar-item has-sub @yield('pengaturan')">
                 <a href="#" class='sidebar-link'>
@@ -195,11 +206,13 @@
                 </a>
                 <ul class="submenu @yield('pengaturan')">
                     <li class="submenu-item @yield('pengaturan-akun')">
-                        <a href="{{URL::to('/pengaturan/pengaturan-akun')}}">Pengaturan Akun</a>
+                        <a href="{{URL::to('/pengaturan/akun')}}">Pengaturan Akun</a>
                     </li>
-                    <li class="submenu-item @yield('pengaturan-aplikasi')">
-                        <a href="{{URL::to('/pengaturan/pengaturan-aplikasi')}}">Pengaturan Aplikasi</a>
-                    </li>
+                    @if ( Auth::user()->user_role_id == 1)
+                        <li class="submenu-item @yield('pengaturan-aplikasi')">
+                            <a href="{{URL::to('/pengaturan/aplikasi')}}">Pengaturan Aplikasi</a>
+                        </li>
+                    @endif
                 </ul>
             </li>
 
@@ -221,7 +234,7 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            {{-- <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                                 <li class="nav-item dropdown me-3">
                                     <a class="nav-link active dropdown-toggle text-gray-600" href="#" data-bs-toggle="dropdown"
                                         aria-expanded="false">
@@ -234,8 +247,8 @@
                                         <li><a class="dropdown-item">No notification available</a></li>
                                     </ul>
                                 </li>
-                            </ul> --}}
-                            <div class="dropdown navbar-nav ms-auto mb-2 mb-lg-0">
+                            </ul>
+                            <div class="dropdown navbar-nav mb-2 mb-lg-0">
                                 <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="user-menu d-flex">
                                         <div class="user-name text-end me-3">
@@ -320,6 +333,7 @@
 <script src="{{asset('js/extensions/sweetalert2.js')}}"></script>
 <script src="{{asset('js/extensions/form-element-select.js')}}"></script>
 <script src="{{asset('js/extensions/jquery.mask.js')}}"></script>
+<script src="{{asset('vendor/select2/js/select2.min.js')}}"></script>
 @livewireScripts()
 @stack('script')
 </body>

@@ -1,6 +1,6 @@
 <div>
-    <div class="row justify-content-between container-fluid">
-        <div class="col-12 col-lg-7 col-md-6 col-xs-12 p-2">
+    <div class="row justify-content-between container-fluid" >
+        <div class="col-12 col-lg-7 col-md-6 col-xs-12 p-2" style="max-height: 650px; height: 650px">
             <div class="row">
                 <div class="col-12">
                     <div class="form-group position-relative has-icon-right">
@@ -39,8 +39,10 @@
 
                     </div>
                 @empty
-                    <img src="{{asset('images/illustrations/empty.svg')}}" class="img-fluid mx-auto mt-5" alt="" width="150px">
-                    <h1 class="display-5 text-center text-white">Belum ada data Produk !</h1>
+                    <div class="col-auto text-center ">
+                        <img src="{{asset('images/illustrations/empty.svg')}}" class="img-fluid mx-auto mt-5 w-50" alt="" width="150px">
+                        <h1 class="display-5 text-center text-white">Belum ada data Produk !</h1>
+                    </div>
                 @endforelse
             </div>
         </div>

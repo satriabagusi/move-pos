@@ -1,4 +1,4 @@
-<div class="col-12 col-lg-5 col-md-6 col-xs-12 card shadow mt-1" style="max-height: 800px; height: 800px">
+<div class="col-12 col-lg-5 col-md-6 col-xs-12 card shadow mt-1" style="max-height: 650px; height: 650px">
 
     <div class="card-body scroll">
     <h4 class="mt-1">Rincian Pesanan</h4>

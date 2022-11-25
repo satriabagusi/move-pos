@@ -16,7 +16,7 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h6 class="text-muted font-semibold">Penjualan Hari Ini ({{date("d F Y")}})</h6>
+                            <h6 class="text-muted font-semibold">Penjualan Perhari ({{date("d F Y")}})</h6>
                             <h6 class="font-extrabold mb-0">Rp. {{number_format($daily_sales, 0, "", ".")}}</h6>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h6 class="text-muted font-semibold">Penjualan (Bulan)</h6>
+                            <h6 class="text-muted font-semibold">Penjualan (Bulan {{date("F")}})</h6>
                             <h6 class="font-extrabold mb-0">Rp. {{number_format($monthly_sales, 0, '', '.')}}</h6>
                         </div>
                     </div>
@@ -50,8 +50,8 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h6 class="text-muted font-semibold">Pengeluaran (Hari)</h6>
-                            <h6 class="font-extrabold mb-0">112.000</h6>
+                            <h6 class="text-muted font-semibold">Pengeluaran Perhari ({{date("d F Y")}})</h6>
+                            <h6 class="font-extrabold mb-0">Rp. {{number_format($daily_expense, 0, "", ".")}}</h6>
                         </div>
                     </div>
                 </div>
@@ -67,8 +67,8 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <h6 class="text-muted font-semibold">Pengeluaran (Bulan)</h6>
-                            <h6 class="font-extrabold mb-0">112.000</h6>
+                            <h6 class="text-muted font-semibold">Pengeluaran (Bulan {{date("F")}})</h6>
+                            <h6 class="font-extrabold mb-0">Rp. {{number_format($monthly_expense, 0, "", ".")}}</h6>
                         </div>
                     </div>
                 </div>
@@ -77,7 +77,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <span class="fs-4">Laporan Keuangan Harian</span>
+                    <span class="fs-4 font-bold">Laporan Keuangan Minggu Ini ({{ \Carbon\Carbon::now()->startOfWeek()->translatedFormat('l, d M Y')}} - {{\Carbon\Carbon::now()->endOfWeek()->translatedFormat('l, d M Y')}})</span>
                 <hr>
                 </div>
                 <div class="card-body">
@@ -91,28 +91,13 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <span class="fs-4">Laporan Keuangan Bulanan</span>
-                <hr>
-                </div>
-                <div class="card-body">
-                    <div id="monthly-sale"></div>
-                </div>
-                <div class="card-footer border-top-0">
-
-                </div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <span class="fs-4">Laporan Keuangan Tahunan</span>
+                    <span class="fs-4 font-bold">Laporan Keuangan Tahunan ( {{ Carbon\Carbon::now()->translatedFormat("Y") }} )</span>
                 <hr>
                 </div>
                 <div class="card-body">
                     <div id="annually-sale"></div>
                 </div>
                 <div class="card-footer border-top-0">
-
                 </div>
             </div>
         </div>
@@ -125,13 +110,6 @@
     <script src="{{asset('js/extensions/apexcharts.js')}}"></script>
 
         <script>
-            function randNumberPemasukan(){
-                return Math.floor(Math.random() * 1000000);
-            };
-
-            function randNumberPengeluaran(){
-                return Math.floor(Math.random() * 1000000);
-            };
 
             function formatRupiah(angka, prefix){
                 const numb = angka;
@@ -170,20 +148,23 @@
                 }
             })
 
-
-            $(document).ready(function(){
-                $('#shop_phone').mask('000-0000-0000');
-            })
-
             var dailySaleChart = new ApexCharts(document.querySelector('#daily-sale'), {
                     series: [
                         {
                             name: "Pemasukan",
-                            data: [randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan()],
+                            data: [
+                                @foreach ($profit['daily'] as $profit_daily)
+                                    {{$profit_daily}},
+                                @endforeach
+                            ],
                         },
                         {
                             name: "Pengeluaran",
-                            data: [randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran()],
+                            data: [
+                                @foreach ($expense['daily'] as $expense_daily)
+                                    {{$expense_daily}},
+                                @endforeach
+                            ],
                         },
                     ],
                     chart: { type: "bar", height: 350 },
@@ -207,48 +188,7 @@
                             "Minggu",
                         ],
                     },
-                    yaxis: { title: { text: "Rp (thousands)" } },
-                    fill: { opacity: 1 },
-                    tooltip: {
-                        y: {
-                            formatter: function (t) {
-                                return formatRupiah(t, "Rp. ") ;
-                            },
-                        },
-                    },
-                    colors: ['#56B6F7', '#F3616D']
-                });
-
-            var monthlySaleChart = new ApexCharts(document.querySelector('#monthly-sale'), {
-                    series: [
-                        {
-                            name: "Pemasukan",
-                            data: [randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan()],
-                        },
-                        {
-                            name: "Pengeluaran",
-                            data: [randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran()],
-                        },
-                    ],
-                    chart: { type: "bar", height: 350 },
-                    plotOptions: {
-                        bar: {
-                            horizontal: !1,
-                            columnWidth: "55%",
-                            endingShape: "rounded",
-                        },
-                    },
-                    dataLabels: { enabled: !1 },
-                    stroke: { show: !0, width: 2, colors: ["transparent"] },
-                    xaxis: {
-                        categories: [
-                            "Minggu 1",
-                            "Minggu 2",
-                            "Minggu 3",
-                            "Minggu 4"
-                        ],
-                    },
-                    yaxis: { title: { text: "Rp (thousands)" } },
+                    yaxis: { title: { text: "Rp (ribu)" } },
                     fill: { opacity: 1 },
                     tooltip: {
                         y: {
@@ -264,12 +204,18 @@
                     series: [
                         {
                             name: "Pemasukan",
-                            data: [randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan(), randNumberPemasukan()
+                            data: [
+                                @foreach ($profit['monthly'] as $profit_monthly)
+                                    {{$profit_monthly}},
+                                @endforeach
                             ],
                         },
                         {
                             name: "Pengeluaran",
-                            data: [randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran(), randNumberPengeluaran()
+                            data: [
+                                @foreach ($expense['monthly'] as $expense_monthly)
+                                    {{$expense_monthly}},
+                                @endforeach
                             ],
                         },
                     ],
@@ -294,11 +240,12 @@
                             "Juli",
                             "Agustus",
                             "September",
+                            "Oktober",
                             "November",
                             "Desember",
                         ],
                     },
-                    yaxis: { title: { text: "Rp (thousands)" } },
+                    yaxis: { title: { text: "Rp (ribu)" } },
                     fill: { opacity: 1 },
                     tooltip: {
                         y: {
@@ -311,9 +258,7 @@
                 });
 
                 dailySaleChart.render();
-                monthlySaleChart.render();
                 annuallySaleChart.render();
-
 
         </script>
 @endpush

@@ -11,7 +11,7 @@
 @endif
 
 @push('menu')
-    <nav class="navbar fixed-bottom navbar-expand bg-light">
+    <nav class="navbar fixed-bottom navbar-expand bg-light " style="height: 30px !important;">
         <div class="container-fluid p-0">
             <a class="navbar-brand" href="#">
                 <img src="{{asset('images/logo.png')}}" alt="">
@@ -22,19 +22,19 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item me-2">
-                <a class=" btn btn-outline-primary" href="{{URL::to('/')}}">
+                <a class=" btn btn-sm btn-outline-primary" href="{{URL::to('/')}}">
                     <i class="bi bi-house"></i>
                     Home
                 </a>
               </li>
               <li class="nav-item">
-                <a class=" btn btn-primary me-2" href="{{URL::to('/transaksi')}}">
+                <a class=" btn btn-sm btn-primary me-2" href="{{URL::to('/transaksi')}}">
                     <i class="bi bi-cart4"></i>
                     Transaksi
                 </a>
               </li>
               <li class="nav-item">
-                <a class=" btn btn-outline-primary" href="{{URL::to('/produk/data-produk')}}">
+                <a class=" btn btn-sm btn-outline-primary" href="{{URL::to('/produk/data-produk')}}">
                     <i class="bi bi-clipboard-data"></i>
                     Produk
                 </a>
@@ -46,8 +46,8 @@
             <a href="#" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="user-menu d-flex">
                     <div class="user-name text-end me-3">
-                        <h6 class="mb-0 text-gray-600">{{Auth::user()->name}}</h6>
-                        <p class="mb-0 text-sm text-gray-600">{{Auth::user()->user_roles->role_name}}</p>
+                        <h6 class="mb-0 text-gray-600 text-sm">{{Auth::user()->name}}</h6>
+                        <p class="mb-0 text-sm text-gray-600 text-sm">{{Auth::user()->user_roles->role_name}}</p>
                     </div>
                     <div class="user-img d-flex align-items-center">
                         <div class="avatar avatar-md">
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton" style="min-width: 11rem;">
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="dropdownMenuButton" style="min-width: 11rem;">
                 <li>
                     <h6 class="dropdown-header">Hello, {{Auth::user()->name}}!</h6>
                 </li>

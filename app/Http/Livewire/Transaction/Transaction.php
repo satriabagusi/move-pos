@@ -184,11 +184,11 @@ class Transaction extends Component
                     'message' => 'Berhasil input transaksi'
                 ]);
 
-            // $this->emit('printResi');
-
                 $this->products = Product::with(['categories'])->get();
 
             }else{
+                $this->cart = Cart::session($this->sessionId);
+                $this->cart_resi = array_values(Cart::getContent()->toArray());
                 $this->dispatchBrowserEvent('message', [
                     'status' => 100 ,
                     'message' => 'Gagal input transaksi'
@@ -197,10 +197,13 @@ class Transaction extends Component
             }
 
         }else{
+            $this->cart = Cart::session($this->sessionId);
+            $this->cart_resi = array_values(Cart::getContent()->toArray());
             $this->dispatchBrowserEvent('message', [
                 'status' => 100 ,
                 'message' => 'Jumlah Pembayaran kurang dari jumlah transaksi !'
             ]);
+
         }
 
     }
